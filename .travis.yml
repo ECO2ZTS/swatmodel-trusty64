@@ -2,10 +2,40 @@
 # create our own environment
 language: c
 sudo: required
+dist: trusty
+services:
+  - docker
+python:
+  - "2.7"
+compiler:
+- gcc
+os:
+- linux
+env:
+  global:
+
+before_install:
+- echo $LANG
+- echo $LC_ALL
+- test -n $CC && unset CC
+before_script:
+- echo "install packages"
 
 install:
-    - sudo apt-get update
-    - sudo apt-get install gfortran gfortran-multilib
+- sudo apt-get update
+- sudo apt-get install gfortran gfortran-multilib
 
-script: 
-    - make rel64 debug64
+script:
+- make rel64 debug64
+
+after_success:
+- echo "make docker"
+
+branches:
+  only:
+  - master
+  - "/^v\\d+\\./"
+
+notifications:
+  email:
+  - allixender@googlemail.com
